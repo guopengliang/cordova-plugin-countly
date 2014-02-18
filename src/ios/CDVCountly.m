@@ -6,20 +6,13 @@
 //
 //
 
-#import "Countly.h"
 #import "CDVCountly.h"
-
-@interface CDVCountly()
-
-@end
+#import "Countly.h"
 
 @implementation CDVCountly
 
-- (id)init {
-    self = [super init];
-    if (self) {
-    }
-    return self;
+- (void) pluginInitialize
+{
 }
 
 
@@ -30,9 +23,7 @@
 
 - (void) recordEvent:(CDVInvokedUrlCommand*)command
 {
-    
     CDVPluginResult* pluginResult = nil;
-    NSString* javaScript = nil;
     
     NSLog(@"Logging Countly Event: %@ x %@", [command.arguments objectAtIndex:0], [command.arguments objectAtIndex:1]);
     
@@ -43,23 +34,18 @@
         [[Countly sharedInstance] recordEvent:key count:count];
         
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
-        javaScript = [pluginResult toSuccessCallbackString:command.callbackId];
     }
     @catch (NSException *exception) {
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_JSON_EXCEPTION
                                          messageAsString:[exception reason]];
-        javaScript = [pluginResult toErrorCallbackString:command.callbackId];
     }
     
-    [self writeJavascript:javaScript];
-    
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
 - (void) recordEventWithSum:(CDVInvokedUrlCommand*)command
 {
-    
     CDVPluginResult* pluginResult = nil;
-    NSString* javaScript = nil;
     
     NSLog(@"Logging Countly Event: %@ x %@ (sum = %@)", [command.arguments objectAtIndex:0], [command.arguments objectAtIndex:1], [command.arguments objectAtIndex:2]);
     
@@ -71,78 +57,63 @@
         [[Countly sharedInstance] recordEvent:key count:count sum:sum];
         
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
-        javaScript = [pluginResult toSuccessCallbackString:command.callbackId];
     }
     @catch (NSException *exception) {
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_JSON_EXCEPTION
                                          messageAsString:[exception reason]];
-        javaScript = [pluginResult toErrorCallbackString:command.callbackId];
     }
     
-    [self writeJavascript:javaScript];
-    
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
 - (void) recordEventWithSegmentation:(CDVInvokedUrlCommand*)command
 {
     
     CDVPluginResult* pluginResult = nil;
-    NSString* javaScript = nil;
     
     NSLog(@"Logging Countly Event: %@ x %@", [command.arguments objectAtIndex:0], [command.arguments objectAtIndex:2]);
     NSLog(@"Segmentation: %@", [command.arguments objectAtIndex:1]);
     
     @try {
         NSString* key = [command.arguments objectAtIndex:0];
-        NSError *e = nil;
-        NSData * data = [[command.arguments objectAtIndex:1] dataUsingEncoding:NSUTF8StringEncoding];
-        NSDictionary* segmentation = [NSJSONSerialization JSONObjectWithData: data options: NSJSONReadingMutableContainers error: &e];
+        NSDictionary* segmentation = [command.arguments objectAtIndex:1];
         int count = [[command.arguments objectAtIndex:2]integerValue];
         
         [[Countly sharedInstance] recordEvent:key segmentation:segmentation count:count];
         
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
-        javaScript = [pluginResult toSuccessCallbackString:command.callbackId];
     }
     @catch (NSException *exception) {
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_JSON_EXCEPTION
                                          messageAsString:[exception reason]];
-        javaScript = [pluginResult toErrorCallbackString:command.callbackId];
     }
     
-    [self writeJavascript:javaScript];
-    
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 
 - (void) recordEventWithSegmentationAndSum:(CDVInvokedUrlCommand*)command
 {
     
     CDVPluginResult* pluginResult = nil;
-    NSString* javaScript = nil;
     
     NSLog(@"Logging Countly Event: %@ x %@ (sum = %@)", [command.arguments objectAtIndex:0], [command.arguments objectAtIndex:2], [command.arguments objectAtIndex:3]);
     NSLog(@"Segmentation: %@", [command.arguments objectAtIndex:1]);
     
     @try {
         NSString* key = [command.arguments objectAtIndex:0];
-        NSError *e = nil;
-        NSData * data = [[command.arguments objectAtIndex:1] dataUsingEncoding:NSUTF8StringEncoding];
-        NSDictionary* segmentation = [NSJSONSerialization JSONObjectWithData: data options: NSJSONReadingMutableContainers error: &e];
+        NSDictionary* segmentation = [command.arguments objectAtIndex:1];
         int count = [[command.arguments objectAtIndex:2]integerValue];
         double sum = [[command.arguments objectAtIndex:3]doubleValue];
         
         [[Countly sharedInstance] recordEvent:key segmentation:segmentation count:count sum:sum];
         
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK];
-        javaScript = [pluginResult toSuccessCallbackString:command.callbackId];
     }
     @catch (NSException *exception) {
         pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_JSON_EXCEPTION
                                          messageAsString:[exception reason]];
-        javaScript = [pluginResult toErrorCallbackString:command.callbackId];
     }
     
-    [self writeJavascript:javaScript];
-    
+    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
 }
 @end
