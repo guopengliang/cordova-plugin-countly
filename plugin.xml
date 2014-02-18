@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<plugin xmlns="http://apache.org/cordova/ns/plugins/1.0"
+		xmlns:android="http://schemas.android.com/apk/res/android"
+		id="com.guopengliang.cordova.countly"
+		version="0.1.0">
+
+	<name>Countly</name>
+
+	<description>
+		Countly analytics plugin for Cordova/PhoneGap projects.
+	</description>
+
+	<author>Guopeng Liang</author>
+
+	<engines>
+		<engine name="cordova" version=">=3.0.0" />
+	</engines>
+
+	<js-module src="www/countly.js" name="Countly">
+		<clobbers target="Countly" />
+	</js-module>
+
+	<!-- android -->
+	<platform name="android">
+		<config-file target="res/xml/config.xml" parent="/*">
+			<feature name="Countly">
+				<param name="android-package" value="com.guopengliang.cordova.Countly" />
+				<param name="onload" value="true" />
+			</feature>
+		</config-file>
+
+		<config-file target="AndroidManifest.xml" parent="/*">
+			<uses-permission android:name="android.permission.INTERNET" />
+		</config-file>
+
+        <config-file target="AndroidManifest.xml" parent="/*">
+            <service android:name="org.OpenUDID.OpenUDID_service">
+                <intent-filter>
+                    <action android:name="org.OpenUDID.GETUDID" />
+                </intent-filter>
+            </service>
+        </config-file>
+
+		<source-file src="src/android/Countly.java" target-dir="src/com/guopengliang/cordova" />
+		<source-file src="src/android/sdk/Countly.java" target-dir="src/ly/count/android/api" />
+		<source-file src="src/android/sdk/OpenUDID_manager.java" target-dir="src/org/OpenUDID" />
+		<source-file src="src/android/sdk/OpenUDID_service.java" target-dir="src/org/OpenUDID" />
+	</platform>
+
+	<!-- ios -->
+	<platform name="ios">
+		<config-file target="config.xml" parent="/*">
+			<feature name="Countly">
+				<param name="ios-package" value="CDVCountly" />
+				<param name="onload" value="true" />
+			</feature>
+		</config-file>
+
+		<header-file src="src/ios/CDVCountly.h" />
+		<source-file src="src/ios/CDVCountly.m" />
+		<header-file src="src/ios/sdk/Countly.h" />
+		<source-file src="src/ios/sdk/Countly.m" compiler-flags="-fno-objc-arc" />
+		<header-file src="src/ios/sdk/CountlyDB.h" />
+		<source-file src="src/ios/sdk/CountlyDB.m" compiler-flags="-fno-objc-arc" />
+		<header-file src="src/ios/sdk/Countly_OpenUDID.h" />
+		<source-file src="src/ios/sdk/Countly_OpenUDID.m" compiler-flags="-fno-objc-arc" />
+		<source-file src="src/ios/sdk/Countly.xcdatamodeld" />
+
+		<framework src="CoreData.framework" />
+		<framework src="CoreTelephony.framework" weak="true" />
+	</platform>
+
+</plugin>
